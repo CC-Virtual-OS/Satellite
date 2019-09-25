@@ -2,7 +2,7 @@
 # 20/09/2019, Lottomatica
 # Alessio Dini
 # Estrae tutti gli host di tipo vmware registrati su Satellite. Dalla lista esclude tutte gli host che nel nome hanno *capsule*
-# Utile per la domanda "quante guest sono registrate su Satellite?"
+# Utile per la domanda "quante e quali guest sono registrate su Satellite?"
 
 cat << EOF > /tmp/hammer_no_timeout.yml
 :foreman:
