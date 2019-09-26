@@ -2,7 +2,7 @@
 # 26/09/2019
 # Playbook for Red Hat Satellite automatic registration
 # Parameters expected: ip of the remote capsule, hostname of the remote capsule, activation key.
-# Example: ansible-playbook satellite.yaml -e "host_capsule=rp-capsule-csmi.lottomatica.net ip_capsule=172.19.253.158 key=rhel"
+# Example: ansible-playbook registration.yaml -e "host_capsule=rp-capsule-csmi.lottomatica.net ip_capsule=172.19.253.158 key=rhel"
 
 - name: Satellite Registration Playbook
   gather_facts: false
