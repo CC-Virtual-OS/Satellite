@@ -1,8 +1,9 @@
+---
 # Alessio Dini
 # 26/09/2019
 # Playbook for Red Hat Satellite automatic registration
 # Parameters expected: ip of the remote capsule, hostname of the remote capsule, activation key.
-# Example: ansible-playbook registration.yaml -e "host_capsule=rp-capsule-csmi.lottomatica.net ip_capsule=172.19.253.158 key=rhel"
+# Example: ansible-playbook satellite.yaml -e "host_capsule=rp-capsule-csmi.lottomatica.net ip_capsule=172.19.253.158 key=rhel"
 
 - name: Satellite Registration Playbook
   gather_facts: false
@@ -82,6 +83,15 @@
       when: net|success
       
 
+    - name: Removing any insight package
+      yum:
+        name: "insights-client"
+        state: absent
+      become: true
+      become_method: sudo
+      when: net|success
+
+
     - name: Downloading katello agent from {{ host_capsule }}
       yum: 
         name: "http://{{ host_capsule }}/pub/katello-ca-consumer-latest.noarch.rpm"
@@ -111,3 +121,31 @@
       become: true
       become_method: sudo
       when: net|success
+
+
+    - name: Installing katello-agent
+      yum:
+        name: katello-agent
+        state: present
+      become: true
+      become_method: sudo
+      when: net|success
+
+
+    - name: Installing insights client
+      yum:
+        name: insights-client
+        state: present
+      become: true
+      become_method: sudo
+      when: net|success
+
+
+    - name: Collecting insights client data
+      shell: insights-client --register 
+      become: true
+      become_method: sudo
+      when: net|success
+      register: insight
+
+    - debug: msg="{{ insight.stdout }}"
