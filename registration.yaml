@@ -35,6 +35,7 @@
         replace: '#proxy'
       become: true
       become_method: sudo
+      when: net|success
 
 
     - name: Commenting out proxy on /etc/rhsm/rhsm.conf
