@@ -28,13 +28,6 @@
       register: net
 
 
-    - name: Checking proxy in the env
-      shell: env | grep -i http 
-      register: proxy
-      failed_when: proxy == 0
-      when: net|success
-
-
     - name: Commenting out proxy on /etc/yum.conf
       replace:
         path: /etc/yum.conf
@@ -51,6 +44,13 @@
         replace: '#proxy'
       become: true
       become_method: sudo
+      when: net|success
+      
+      
+    - name: Checking proxy in the env 
+      shell: env | grep -i http
+      register: proxy
+      failed_when: proxy == 0
       when: net|success
       
 
