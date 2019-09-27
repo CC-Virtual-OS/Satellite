@@ -3,12 +3,18 @@
 # 26/09/2019
 # Playbook for Red Hat Satellite automatic registration
 # Parameters expected: ip of the remote capsule, hostname of the remote capsule, activation key.
-# Example: ansible-playbook satellite.yaml -e "host_capsule=rp-capsule-csmi.lottomatica.net ip_capsule=172.19.253.158 key=rhel org=<organization_name>"
+# Example: ansible-playbook satellite.yaml -e "host_capsule=rp-capsule-csmi.lottomatica.net ip_capsule=172.19.253.158 key=rhel org=organization_name"
 
 - name: Satellite Registration Playbook
   gather_facts: false
   hosts: [cavia]
   tasks:
+  vars:
+#    ansible_ssh_user: administrator
+    ansible_ssh_pass: C4mb14m1!
+#    ansible_ssh_pass: Password1
+    ansible_become_pass: C4mb14m1!
+#    ansible_become_pass: Password1
 
     - name: Check network connectivity to {{ host_capsule }}
       wait_for:
@@ -46,14 +52,14 @@
       become: true
       become_method: sudo
       when: net|success
-      
-      
-    - name: Checking proxy in the env 
+
+
+    - name: Checking proxy in the env
       shell: env | grep -i http
       register: proxy
       failed_when: proxy == 0
       when: net|success
-      
+
 
     - name: Checking /etc/hosts contents
       lineinfile:
@@ -63,7 +69,7 @@
       become: true
       become_method: sudo
       when: net|success
-     
+
 
     - name: Updating /etc/hosts contents with {{ host_capsule }} line
       lineinfile:
@@ -82,7 +88,7 @@
       become: true
       become_method: sudo
       when: net|success
-      
+
 
     - name: Removing any insight package
       yum:
@@ -94,20 +100,20 @@
 
 
     - name: Downloading katello agent from {{ host_capsule }}
-      yum: 
+      yum:
         name: "http://{{ host_capsule }}/pub/katello-ca-consumer-latest.noarch.rpm"
         state: present
       become: true
       become_method: sudo
       register: katello
       when: net|success
-      
-    
+
+
     - name: Registering the system against {{ host_capsule }}
       redhat_subscription:
         state: present
         activationkey: "{{ key }}"
-        org_id: "{{ org }}"  
+        org_id: "{{ org }}"
       become: true
       become_method: sudo
       when:
@@ -143,7 +149,7 @@
 
 
     - name: Collecting insights client data
-      shell: insights-client --register 
+      shell: insights-client --register
       become: true
       become_method: sudo
       when: net|success
