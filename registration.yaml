@@ -3,14 +3,15 @@
 # 26/09/2019
 # Playbook for Red Hat Satellite automatic registration
 # Parameters expected: ip of the remote capsule, hostname of the remote capsule, activation key, organization.
-# Example: ansible-playbook satellite.yaml -e "host_capsule=capsule-italy.it ip_capsule=12.19.25.15 key=rhel org=test"
+# Example: ansible-playbook satellite.yaml -e "host_capsule=rp-capsule-prod-ita ip_capsule=12.19.25.15 key=rhel org=MYIGT"
 
 - name: Satellite Registration Playbook
   gather_facts: false
   hosts: hosts
   vars:
-    ansible_ssh_pass: password
-    ansible_become_pass: password
+    ansible_ssh_user: administrator
+    ansible_ssh_pass: C4mb14m1!
+    ansible_become_pass: C4mb14m1!
   tasks:
 
     - name: Check network connectivity to {{ host_capsule }}
