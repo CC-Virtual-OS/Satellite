@@ -2,19 +2,16 @@
 # Alessio Dini
 # 26/09/2019
 # Playbook for Red Hat Satellite automatic registration
-# Parameters expected: ip of the remote capsule, hostname of the remote capsule, activation key.
-# Example: ansible-playbook satellite.yaml -e "host_capsule=rp-capsule-csmi.lottomatica.net ip_capsule=172.19.253.158 key=rhel org=organization_name"
+# Parameters expected: ip of the remote capsule, hostname of the remote capsule, activation key, organization.
+# Example: ansible-playbook satellite.yaml -e "host_capsule=capsule-italy.it ip_capsule=12.19.25.15 key=rhel org=test"
 
 - name: Satellite Registration Playbook
   gather_facts: false
-  hosts: [cavia]
-  tasks:
+  hosts: hosts
   vars:
-#    ansible_ssh_user: administrator
-    ansible_ssh_pass: C4mb14m1!
-#    ansible_ssh_pass: Password1
-    ansible_become_pass: C4mb14m1!
-#    ansible_become_pass: Password1
+    ansible_ssh_pass: password
+    ansible_become_pass: password
+  tasks:
 
     - name: Check network connectivity to {{ host_capsule }}
       wait_for:
@@ -155,4 +152,5 @@
       when: net|success
       register: insight
 
-    - debug: msg="{{ insight.stdout }}"
+    - debug:
+        var: "{{ insight }}"
