@@ -1,4 +1,5 @@
 ---
+#DA AGGIUNGERE LA RIMOZIONE DEL FILE /etc/rhsm/facts/katello.facts dopo aver rimosso l'RPM del katello ( primo rpm ) 
 # Alessio Dini
 # 26/09/2019
 # Playbook for Red Hat Satellite automatic registration
