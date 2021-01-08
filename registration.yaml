@@ -15,6 +15,7 @@
     ansible_become_pass: C4mb14m1!
   tasks:
 
+
     - name: Check network connectivity to {{ host_capsule }}
       wait_for:
         host: "{{ ip_capsule }}"
@@ -29,7 +30,6 @@
         - 8443
         - 8140
         - 5647
-        - 5671
       register: net
 
 
@@ -40,7 +40,7 @@
         replace: '#proxy'
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
     - name: Commenting out proxy on /etc/rhsm/rhsm.conf
@@ -50,14 +50,14 @@
         replace: '#proxy'
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
     - name: Checking proxy in the env
       shell: env | grep -i http
       register: proxy
       failed_when: proxy == 0
-      when: net|success
+      when: net is success
 
 
     - name: Checking /etc/hosts contents
@@ -67,7 +67,7 @@
         line: '#'
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
     - name: Updating /etc/hosts contents with {{ host_capsule }} line
@@ -77,7 +77,7 @@
         state: present
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
     - name: Removing any katello package
@@ -86,7 +86,7 @@
         state: absent
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
     - name: Removing any insight package
@@ -95,7 +95,7 @@
         state: absent
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
     - name: Downloading katello agent from {{ host_capsule }}
@@ -105,7 +105,7 @@
       become: true
       become_method: sudo
       register: katello
-      when: net|success
+      when: net is success
 
 
     - name: Registering the system against {{ host_capsule }}
@@ -116,8 +116,8 @@
       become: true
       become_method: sudo
       when:
-        - net|success
-        - katello|success
+        - net is success
+        - katello is success
 
 
     - name: Checking active YUM repositories
@@ -126,7 +126,7 @@
       failed_when: repolist == 1
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
     - name: Installing katello-agent
@@ -135,24 +135,24 @@
         state: present
       become: true
       become_method: sudo
-      when: net|success
+      when: net is success
 
 
-    - name: Installing insights client
-      yum:
-        name: insights-client
-        state: present
-      become: true
-      become_method: sudo
-      when: net|success
+#    - name: Installing insights client
+#      yum:
+#        name: insights-client
+#        state: present
+#      become: true
+#      become_method: sudo
+#      when: net is success
 
 
-    - name: Collecting insights client data
-      shell: insights-client --register
-      become: true
-      become_method: sudo
-      when: net|success
-      register: insight
+#    - name: Collecting insights client data
+#      shell: insights-client --register
+#      become: true
+#      become_method: sudo
+#      when: net is success
+#      register: insight
 
-    - debug:
-        msg: "{{ insight }}"
+#    - debug:
+#        msg: "{{ insight }}"
