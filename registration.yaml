@@ -80,6 +80,28 @@
       when: net is success
 
 
+#    - name: Clean old subscription-manager data
+#      shell: /sbin/subscription-manager clean
+#      become: true
+#      become_method: sudo
+#      when: net is success
+
+
+    - name: De-registering the system against {{ host_capsule }}
+      redhat_subscription:
+        state: absent
+      become: true
+      become_method: sudo
+      when: net is success
+
+    - name: Clean old subscription-manager data
+      shell: /usr/sbin/subscription-manager clean
+      become: true
+      become_method: sudo
+      when: net is success
+
+#   - meta: end_play
+
     - name: Removing any katello package
       yum:
         name: "*katello*"
@@ -122,12 +144,18 @@
 
     - name: Checking active YUM repositories
       shell: yum repolist | grep -v This | grep server
-      register: repolist
-      failed_when: repolist == 1
+      register: repolist1
+      failed_when: repolist1 == 1
+      become: true
+      become_method: sudo
+
+    - name: Checking active YUM repositories
+      shell: yum repolist | grep -v This | grep server | grep rhel-7-server-rpms | awk '{ print $6 }'
+      register: repolist2
+      failed_when: repolist2.stdout | int < 30000
       become: true
       become_method: sudo
       when: net is success
-
 
     - name: Installing katello-agent
       yum:
