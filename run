@@ -1,0 +1,1 @@
+ansible-playbook -i inventory registration.yaml -e "host_capsule=rp-capsule-no-prod-ita.lottomatica.net ip_capsule=172.26.166.171 key=key-no-prod-ita org=MYIGT"
