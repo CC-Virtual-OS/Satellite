@@ -149,13 +149,13 @@
       become: true
       become_method: sudo
 
-    - name: Checking active YUM repositories
-      shell: yum repolist | grep -v This | grep server | grep rhel-7-server-rpms | awk '{ print $6 }'
-      register: repolist2
-      failed_when: repolist2.stdout | int < 30000
-      become: true
-      become_method: sudo
-      when: net is success
+#    - name: Checking active YUM repositories
+#      shell: yum repolist | grep -v This | grep server | grep rhel-7-server-rpms | awk '{ print $6 }'
+#      register: repolist2
+#      failed_when: repolist2.stdout | int < 30000
+#      become: true
+#      become_method: sudo
+#      when: net is success
 
     - name: Installing katello-agent
       yum:
